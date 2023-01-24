@@ -2,6 +2,10 @@ overwrite_existing = False
 save_path = r""
 save_full_text = True
 
+# Authentication details
+uid = ""
+hsh = ""
+
 # AVAILABLE FIELDS
 #  name
 #  post_date

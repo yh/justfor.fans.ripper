@@ -122,12 +122,11 @@ def text_save(tpost):
 
     folder = create_folder(tpost)
     tpath = os.path.join(folder, tpost.title)
-
     print(f't: {tpath}')
 
-    text_file = open(tpath, "w", encoding='utf-8')
-    text_file.write(tpost.full_text)
-    text_file.close()
+    with open(tpath, "w", encoding='utf-8') as file:
+        file.write(tpost.full_text)
+        file.close()
 
 def parse_and_get(html_text):
     soup = BeautifulSoup(html_text, 'html.parser')
@@ -142,7 +141,7 @@ def parse_and_get(html_text):
 
     for pp in soup.select('div.mbsc-card.jffPostClass'):
 
-        time.sleep(random.randint(1, 2))
+        # time.sleep(random.randint(1, 2)) # @VeryEvilHumna: I tested for about 5 hours (left the computer overnight) and I did not get any "too frequent requests" errors 
 
         # print("date")
         # print(pp.select('div.mbsc-card-subtitle')[0].text.strip())
@@ -185,9 +184,19 @@ def parse_and_get(html_text):
 
 if __name__ == "__main__":
 
-
-    uid = sys.argv[1]
-    hsh = sys.argv[2]
+    if len(sys.argv)>3:
+        uid = sys.argv[1]
+        hsh = sys.argv[2]
+        print("Using uid and hash from command line parameters")
+       
+    else:
+        uid = config.uid
+        hsh = config.hsh
+        if uid == "" or hsh == "":
+            print("Specify UserID and UserHash4 in the config file or in the command line parameters and restart program. Aborted.")
+            sys.exit(0)
+        else:
+            print("Using uid and hash from config file...")
 
     api_url = config.api_url
 

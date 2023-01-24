@@ -27,7 +27,7 @@ class JJFPost:
 
         self.post_date = parse(self.post_date_str).strftime("%Y-%m-%d")
         self.desc = self.full_text[0:50].strip() + ('...' if len(self.full_text) > 45 else '')
-        self.desc = re.sub(r'["|/|\:|?|$|!|<|>|~|`|(|)|@|#|$|%|^|&|*|\n|\t|\r]', r'', self.desc)
+        self.desc = re.sub(r'["|/|\\|\:|?|$|!|<|>|~|`|(|)|@|#|$|%|^|&|*|\n|\t|\r]', r'', self.desc)
         
         self.title = config.file_name_format \
             .replace('{name}', self.name) \

@@ -18,7 +18,18 @@
     3.  (in Chrome), hit F12 to open dev-console
     4.  Refresh page to view network activity
     5.  Locate `getPost.php` call, extract `UserID` and `UserHash4` values (in yellow)
+    
+    ![image](https://user-images.githubusercontent.com/12958294/115130004-859a5580-9fa0-11eb-9275-235d4ec51967.png)
+
+    
     6.  Pass in as params when running script
         * `python app.py [UserID] [UserHash]`
+        
+        or
+        specify uid and hsh in config.py
 
-![image](https://user-images.githubusercontent.com/12958294/115130004-859a5580-9fa0-11eb-9275-235d4ec51967.png)
+        ```
+        # Authentication details
+        uid = ""
+        hsh = ""
+        ```

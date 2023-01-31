@@ -74,6 +74,7 @@ def photo_save(ppost):
 
         try:
             response = requests.get(img[1], stream=True)
+            print("Downloading " + str(round(int(response.headers.get('content-length'))/1024/1024, 2)) + " MB")
             with open(img[0], 'wb') as out_file:
                 shutil.copyfileobj(response.raw, out_file)
             del response
@@ -109,6 +110,9 @@ def video_save(vpost):
         # print("Done: " + obj.get_dest())
 
         response = requests.get(vpost.url_vid, stream=True)
+
+        print("Downloading " + str(round(int(response.headers.get('content-length'))/1024/1024, 2)) + " MB")
+
         with open(vpath, 'wb') as out_file:
             shutil.copyfileobj(response.raw, out_file)
         del response

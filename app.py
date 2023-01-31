@@ -184,7 +184,7 @@ def parse_and_get(html_text):
 
 if __name__ == "__main__":
 
-    if len(sys.argv)>3:
+    if len(sys.argv) == 3:
         uid = sys.argv[1]
         hsh = sys.argv[2]
         print("Using uid and hash from command line parameters")

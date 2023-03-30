@@ -25,7 +25,12 @@ class JJFPost:
 
     def prepdata(self):
 
-        self.post_date = parse(self.post_date_str).strftime("%Y-%m-%d")
+        # Stripping "burning post" alert
+        self.post_date_str = self.post_date_str.split('  This post will disappear')[0] # @VeryEvilHumna: yes, crutch, but it works faster.
+
+        dt_format = '%B %d, %Y, %I:%M %p'
+        dt = datetime.datetime.strptime(self.post_date_str, dt_format)
+        self.post_date = dt.strftime("%Y-%m-%d")
         self.desc = self.full_text[0:50].strip() + ('...' if len(self.full_text) > 45 else '')
         self.desc = re.sub(r'["|/|\\|\:|?|$|!|<|>|~|`|(|)|@|#|$|%|^|&|*|\n|\t|\r]', r'', self.desc)
         

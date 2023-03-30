@@ -7,9 +7,6 @@ import random
 
 import config
 import requests
-# import urllib.request
-# import re
-# from pySmartDL import SmartDL
 
 from bs4 import BeautifulSoup
 
@@ -17,7 +14,6 @@ from Class.JJFPost import JJFPost
 
 def create_folder(tpost):
     fpath = os.path.join(config.save_path, tpost.name, tpost.type)
-    # fpath = os.path.join(config.save_path, re.sub('\W', '', tpost.name), tpost.type)
 
     if not os.path.exists(fpath):
         os.makedirs(fpath)
@@ -66,11 +62,6 @@ def photo_save(ppost):
     for img in photos_url:
         print(f'p: {img[0]}')
         print(img[1])
-        # urllib.request.urlretrieve(img[1], img[0])
-
-        # obj = SmartDL(img[1], img[0])
-        # obj.start()
-        # print("Done: " + obj.get_dest())
 
         try:
             response = requests.get(img[1], stream=True)
@@ -103,11 +94,6 @@ def video_save(vpost):
 
         print(f'v: {vpath}')
         print(vpost.url_vid)
-        # urllib.request.urlretrieve(vpost.url_vid, vpath)
-
-        # obj = SmartDL(vpost.url_vid, vpath)
-        # obj.start()
-        # print("Done: " + obj.get_dest())
 
         response = requests.get(vpost.url_vid, stream=True)
 
@@ -135,20 +121,9 @@ def text_save(tpost):
 def parse_and_get(html_text):
     soup = BeautifulSoup(html_text, 'html.parser')
 
-    # name
-    # name = soup.select('h5.mbsc-card-title.mbsc-bold span')[0].text
-    # print(name)
-    # print(soup.select('h5.mbsc-card-title.mbsc-bold span')[0].get("onclick").lstrip("location.href='/").rstrip("'"))
-    # # date
-    # post_date = soup.select('div.mbsc-card-subtitle')[0].text.strip()
-    # print("post_date: " + post_date)
-
     for pp in soup.select('div.mbsc-card.jffPostClass'):
 
         # time.sleep(random.randint(1, 2)) # @VeryEvilHumna: I tested for about 5 hours (left the computer overnight) and I did not get any "too frequent requests" errors 
-
-        # print("date")
-        # print(pp.select('div.mbsc-card-subtitle')[0].text.strip())
 
         ptext = pp.select('div.fr-view')
 
@@ -170,7 +145,6 @@ def parse_and_get(html_text):
             video_save(thispost)
 
             if config.save_full_text:
-                #thispost.type = 'text'
                 text_save(thispost)
 
         elif 'photo' in classvals:
@@ -178,7 +152,6 @@ def parse_and_get(html_text):
             photo_save(thispost)
 
             if config.save_full_text:
-                #thispost.type = 'text'
                 text_save(thispost)
                 
         elif 'text' in classvals:

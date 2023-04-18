@@ -9,6 +9,11 @@
 ![](https://img.shields.io/badge/Beautiful-SOUP%204-brightgreen)
 ## Usage
 
+0. (optional) Create and activate a Python virtual environment:
+     ```
+    python -m venv venv
+    venv\Scripts\activate
+    ```
 1. Install requirements: `pip install -r requirements.txt`
 2. Set configuration
     1. `overwrite_existing` - will skip download if file exists

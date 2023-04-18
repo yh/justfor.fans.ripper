@@ -2,15 +2,18 @@ import os
 import shutil
 import sys
 import json
-import time
-import random
-
-import config
 import requests
 
 from bs4 import BeautifulSoup
 
+import config
 from Class.JJFPost import JJFPost
+
+
+
+loopct = 0
+
+
 
 def create_folder(tpost):
     fpath = os.path.join(config.save_path, tpost.name, tpost.type)
@@ -19,6 +22,8 @@ def create_folder(tpost):
         os.makedirs(fpath)
     
     return fpath
+
+
 
 def photo_save(ppost):
     ii = 1
@@ -58,7 +63,8 @@ def photo_save(ppost):
         ])
 
         ii += 1
-    
+
+
     for img in photos_url:
         print(f'p: {img[0]}')
         print(img[1])
@@ -71,6 +77,7 @@ def photo_save(ppost):
             del response
         except Exception as e:
             print(e)
+
 
 
 def video_save(vpost):
@@ -106,6 +113,8 @@ def video_save(vpost):
     except Exception as e:
         print(e)
 
+
+
 def text_save(tpost):
     tpost.ext = 'txt'
     tpost.prepdata()
@@ -117,6 +126,8 @@ def text_save(tpost):
     with open(tpath, "w", encoding='utf-8') as file:
         file.write(tpost.full_text)
         file.close()
+
+
 
 def parse_and_get(html_text):
     soup = BeautifulSoup(html_text, 'html.parser')
@@ -159,6 +170,16 @@ def parse_and_get(html_text):
                 thispost.type = 'text'
                 text_save(thispost)
 
+
+
+def get_html(loopct):
+    geturl = config.api_url.format(userid=uid, seq=loopct, hash=hsh)
+    # print(geturl)
+    html_text = requests.get(geturl).text
+
+    return html_text
+        
+
 if __name__ == "__main__":
 
     if len(sys.argv) == 3:
@@ -175,18 +196,19 @@ if __name__ == "__main__":
         else:
             print("Using uid and hash from config file...")
 
-    api_url = config.api_url
 
     loopit = True
-    loopct = 0
+
+
     while loopit:
 
-        geturl = api_url.format(userid=uid, seq=loopct, hash=hsh)
-        # print(geturl)
-        html_text = requests.get(geturl).text
+        html_text = get_html(loopct)
 
         if 'as sad as you are' in html_text:
-            loopit = False
+                print("No more posts to parse. Exiting.")
+                print("If program is not downloaded any files, your token is expired or invalid. Get a new one.")
+                loopit = False
+            
         else:
             parse_and_get(html_text)
             loopct += 10

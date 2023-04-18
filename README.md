@@ -41,3 +41,7 @@
         uid = ""
         hsh = ""
         ```
+
+## Contributors
+
+This repo is a **fork** of the [edwardsdean's fix](https://github.com/edwardsdean/justfor.fans.ripper), which is fork of a [whats-happening-rightnow/justfor.fans.ripper](https://github.com/whats-happening-rightnow/justfor.fans.ripper), both repos are no longer updated

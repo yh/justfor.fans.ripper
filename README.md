@@ -1,7 +1,19 @@
-## Thing to download all content from someone's JustFor.Fans
+# Script to download all content from someone's JustFor.Fans
 
-### Written in Python 3.8
+![](https://img.shields.io/badge/written%20with%20-python%203.8-gray?logo=python&logoColor=ffd143&labelColor=386e9e)
+![](https://img.shields.io/badge/-but-brightgreen)
+![](https://img.shields.io/badge/works%20with%20-python%203.11-gray?logo=python&logoColor=ffd143&labelColor=386e9e)
 
+![](https://img.shields.io/github/languages/code-size/VeryEvilHumna/justfor.fans.ripper)
+![](https://img.shields.io/github/license/VeryEvilHumna/justfor.fans.ripper)
+![](https://img.shields.io/badge/Beautiful-SOUP%204-brightgreen)
+## Usage
+
+0. (optional) Create and activate a Python virtual environment:
+     ```
+    python -m venv venv
+    venv\Scripts\activate
+    ```
 1. Install requirements: `pip install -r requirements.txt`
 2. Set configuration
     1. `overwrite_existing` - will skip download if file exists
@@ -12,7 +24,8 @@
         * `post_date`
         * `post_id`
         * `desc`
-2. Get UserID and UserHash values
+   
+3. Get UserID and UserHash values
     1.  Log into your JustFor.Fans account
     2.  Select performer's page
     3.  (in Chrome), hit F12 to open dev-console
@@ -33,3 +46,7 @@
         uid = ""
         hsh = ""
         ```
+
+## Contributors
+
+This repo is a **fork** of the [edwardsdean's fix](https://github.com/edwardsdean/justfor.fans.ripper), which is fork of a [whats-happening-rightnow/justfor.fans.ripper](https://github.com/whats-happening-rightnow/justfor.fans.ripper), both repos are no longer updated

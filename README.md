@@ -7,6 +7,11 @@
 ![](https://img.shields.io/github/languages/code-size/VeryEvilHumna/justfor.fans.ripper)
 ![](https://img.shields.io/github/license/VeryEvilHumna/justfor.fans.ripper)
 ![](https://img.shields.io/badge/Beautiful-SOUP%204-brightgreen)
+## !!! VIDEO DOWNLOADER IS BROKEN
+
+VIDEO SAVING IS BROKEN FOR NOW, JFF STORE MOST NEW VIDEOS IN HLS FORMAT, WHICH IS NOT SUPPORTED BY THIS SCRIPT. (TODO) (maybe)
+
+Photos are fine 
 ## Usage
 
 0. (optional) Create and activate a Python virtual environment:

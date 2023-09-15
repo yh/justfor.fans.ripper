@@ -78,15 +78,15 @@ class Post:
             .replace("{post_id}", self.post_id)
             .replace("{desc}", self.excerpt)
         )
-        basename = basename.strip().encode('utf-8')
+        basename = basename.strip().encode("utf-8")
 
         if len(basename) >= 140:
-            i = basename.rfind(b' ', 0, 140)
+            i = basename.rfind(b" ", 0, 140)
             if i == -1:
                 i = 140
-            basename = basename[:i] + b'...'
+            basename = basename[:i] + b"..."
 
-        self.basename = basename.decode('utf-8')
+        self.basename = basename.decode("utf-8")
 
 
 def create_folder(post: Post) -> str:
@@ -119,7 +119,15 @@ def photo_save(post: Post):
             [os.path.join(folder, "{}.{:02}".format(post.basename, i)), ext]
         )
 
-        exists = len(glob.glob(os.path.join(folder, post.basename[:50]) + '*.{:02}.{}'.format(i, ext))) > 0
+        exists = (
+            len(
+                glob.glob(
+                    os.path.join(folder, post.basename[:50])
+                    + "*.{:02}.{}".format(i, ext)
+                )
+            )
+            > 0
+        )
         if not config.overwrite_existing and exists:
             # print(f'p: <<exists skip>>: {ppath}')
             continue
@@ -149,7 +157,10 @@ def video_save(post: Post):
     folder = create_folder(post)
     vpath = os.path.join(folder, post.basename) + ".mp4"
 
-    exists = len(glob.glob(os.path.join(folder, post.basename[:50]) + '*.ytdl')) == 0 and len(glob.glob(os.path.join(folder, post.basename[:50]) + '*.mp4')) > 0
+    exists = (
+        len(glob.glob(os.path.join(folder, post.basename[:50]) + "*.ytdl")) == 0
+        and len(glob.glob(os.path.join(folder, post.basename[:50]) + "*.mp4")) > 0
+    )
     if not config.overwrite_existing and exists:
         return
 
@@ -172,11 +183,11 @@ def video_save(post: Post):
 
         print("Downloading %s" % post.basename[:30])
         ydl_opts = {
-            'retries': 10,
-            'updatetime': True,
-            'noprogress': True,
-            'concurrent_fragment_downloads': 3,
-            'outtmpl': vpath,
+            "retries": 10,
+            "updatetime": True,
+            "noprogress": True,
+            "concurrent_fragment_downloads": 3,
+            "outtmpl": vpath,
         }
         with YoutubeDL(ydl_opts) as ydl:
             ydl.download([url])
@@ -193,7 +204,7 @@ def text_save(post: Post):
     folder = create_folder(post)
     tpath = os.path.join(folder, post.basename) + ".txt"
 
-    exists = len(glob.glob(os.path.join(folder, post.basename[:50]) + '*.txt')) > 0
+    exists = len(glob.glob(os.path.join(folder, post.basename[:50]) + "*.txt")) > 0
     if not config.overwrite_existing and exists:
         return
 

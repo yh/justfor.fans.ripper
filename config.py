@@ -5,19 +5,18 @@ save_full_text = True
 # Authentication details
 uid = ""
 hsh = ""
+poster_id = ""
 
 # AVAILABLE FIELDS
-#  name
+#  name (Uploader ID)
 #  post_date
 #  post_id
 #  desc
-#  photo_seq (do not change this)
-#  ext (do not change this)
 
-file_name_format = '{post_date}_{desc}{photo_seq}.{ext}'
+file_name_format = '{post_date} - {post_id} - {desc}'
 
 # PROBABLY DON'T NEED TO CHANGE THIS
-api_url = 'https://justfor.fans/ajax/getPosts.php?UserID={userid}&Type=All&StartAt={seq}&Source=Home&UserHash4={hash}'
+api_url = 'https://justfor.fans/ajax/getPosts.php?UserID={userid}&PosterID={poster_id}&Type=One&StartAt={seq}&Page=Profile&UserHash4={hash}'
 
 
 

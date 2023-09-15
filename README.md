@@ -7,11 +7,7 @@
 ![](https://img.shields.io/github/languages/code-size/VeryEvilHumna/justfor.fans.ripper)
 ![](https://img.shields.io/github/license/VeryEvilHumna/justfor.fans.ripper)
 ![](https://img.shields.io/badge/Beautiful-SOUP%204-brightgreen)
-## !!! VIDEO DOWNLOADER IS BROKEN
 
-VIDEO SAVING IS BROKEN FOR NOW, JFF STORE MOST NEW VIDEOS IN HLS FORMAT, WHICH IS NOT SUPPORTED BY THIS SCRIPT. (TODO) (maybe)
-
-Photos are fine 
 ## Usage
 
 0. (optional) Create and activate a Python virtual environment:
@@ -35,13 +31,13 @@ Photos are fine
     2.  Select performer's page
     3.  (in Chrome), hit F12 to open dev-console
     4.  Refresh page to view network activity
-    5.  Locate `getPost.php` call, extract `UserID` and `UserHash4` values (in yellow)
+    5.  Locate `getPost.php` call, extract `UserID`, `UserHash4` and `PosterID` values (in yellow)
     
     ![image](https://user-images.githubusercontent.com/12958294/115130004-859a5580-9fa0-11eb-9275-235d4ec51967.png)
 
     
     6.  Pass in as params when running script
-        * `python app.py [UserID] [UserHash]`
+        * `python app.py [UserID] [UserHash] [PosterID]`
         
         or
         specify uid and hsh in config.py

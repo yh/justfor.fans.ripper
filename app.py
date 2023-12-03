@@ -1,6 +1,7 @@
 import base64
 import datetime
 import glob
+import html
 import json
 import os
 import re
@@ -31,7 +32,7 @@ class Post:
         self.post_date_str = self.post_date_str.split("This post will disappear")[
             0
         ].strip()
-        self.post_id = base64.b64decode(post_soup.attrs["data-pid"]).decode()
+        self.pid = base64.b64decode(post_soup.attrs["data-pid"]).decode()
         self.full_text = ptext[0].text.strip() if ptext else ""
         self.tags = list(
             x.text.strip().strip("#") for x in post_soup.select("div.postTags a")
@@ -57,6 +58,8 @@ class Post:
         elif "text" in classvals:
             self.type = "text"
 
+        self.pinned = "pinned" in classvals
+
         store_button = post_soup.select("div.storeItemWidget button")
         if len(store_button) > 0:
             store_url = re.fullmatch(
@@ -64,10 +67,43 @@ class Post:
             ).group(1)
             self.store_url = urllib.parse.urljoin("https://justfor.fans/", store_url)
 
-        dt_format = "%B %d, %Y, %I:%M %p"
-        dt = datetime.datetime.strptime(self.post_date_str, dt_format)
-        self.post_date = dt.strftime("%Y-%m-%d")
-        self.post_date_iso = dt.isoformat()
+        self.upload_date = "Unknown Date"
+        self.upload_date_iso = "Unknown Date"
+        self.post_date = "Unknown Date"
+        self.post_date_iso = "Unknown Date"
+
+        try:
+            card_subtitle = post_soup.select("div.mbsc-card-subtitle")
+            post_url = html.unescape(
+                re.fullmatch(
+                    r"""location\.href=['"]/?(.+?)['"]""",
+                    card_subtitle[0].get("onclick"),
+                ).group(1)
+            )
+            self.post_url = urllib.parse.urljoin("https://justfor.fans/", post_url)
+            parsed_url = urllib.parse.urlparse(self.post_url)
+            query_strings = urllib.parse.parse_qs(parsed_url.query)
+            if "Post" in query_strings:
+                self.mcid = base64.b64decode(query_strings["Post"][0]).decode()
+                if "-MC-" in self.mcid:
+                    dt = datetime.datetime.fromtimestamp(
+                        int(self.mcid.split("-MC-")[1]) * 0.001
+                    )
+                    self.upload_date = dt.strftime("%Y-%m-%d")
+                    self.upload_date_iso = dt.isoformat()
+                    self.post_date = self.upload_date
+                    self.post_date_iso = self.upload_date_iso
+        except:
+            pass
+
+        try:
+            dt_format = "%B %d, %Y, %I:%M %p"
+            dt = datetime.datetime.strptime(self.post_date_str, dt_format)
+            self.post_date = dt.strftime("%Y-%m-%d")
+            self.post_date_iso = dt.isoformat()
+        except:
+            pass
+
         self.excerpt = self.full_text
         self.excerpt = re.sub(r'[\\\/:*?"<>|\s]', " ", self.excerpt)
         self.excerpt = re.sub(r"\s{2,}", " ", self.excerpt).strip()
@@ -75,7 +111,7 @@ class Post:
         basename = (
             config.file_name_format.replace("{name}", self.uploader_id)
             .replace("{post_date}", self.post_date)
-            .replace("{post_id}", self.post_id)
+            .replace("{post_id}", self.pid)
             .replace("{desc}", self.excerpt)
         )
         basename = basename.strip().encode("utf-8")
@@ -157,11 +193,16 @@ def video_save(post: Post):
     folder = create_folder(post)
     vpath = os.path.join(folder, post.basename) + ".mp4"
 
-    exists = (
-        len(glob.glob(os.path.join(folder, post.basename[:50]) + "*.ytdl")) == 0
-        and len(glob.glob(os.path.join(folder, post.basename[:50]) + "*.mp4")) > 0
+    downloading = next(
+        iter(glob.glob(os.path.join(folder, f"* - {post.pid} - *.ytdl"))), None
     )
+    downloaded = next(
+        iter(glob.glob(os.path.join(folder, f"* - {post.pid} - *.mp4"))), None
+    )
+    exists = downloading is None and downloaded is not None
     if not config.overwrite_existing and exists:
+        if downloaded is not None and downloaded != vpath:
+            os.rename(downloaded, vpath)
         return
 
     try:
@@ -212,8 +253,10 @@ def text_save(post: Post):
 
     with open(tpath, "w", encoding="utf-8") as file:
         file.write("---\n")
-        file.write("id: %s\n" % post.post_id)
-        file.write("date: %s\n" % post.post_date_iso)
+        file.write("pid: %s\n" % post.pid)
+        file.write("mcid: %s\n" % post.mcid)
+        file.write("upload: %s\n" % post.upload_date_iso)
+        file.write("publish: %s\n" % post.post_date_iso)
         file.write("tags: %s\n" % ", ".join(post.tags))
         if post.access_control is not None:
             file.write("access_control: %s\n" % post.access_control)
@@ -251,13 +294,21 @@ def parse_and_get(html_text: str):
                 if config.save_full_text:
                     text_save(post)
 
+            if post.post_date == "Unknown Date":
+                print("================================")
+                print("[WARN] Unknown Date")
+                print(pp.prettify())
+                print("================================")
+
         except KeyboardInterrupt:
             sys.exit(0)
         except Exception:
+            print("================================")
+            print(pp.prettify())
             import traceback
 
             print(traceback.format_exc())
-            # print(pp.prettify())
+            print("================================")
 
 
 def get_html(loopct: int) -> str:
